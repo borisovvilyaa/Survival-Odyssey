@@ -5,20 +5,22 @@ const auth = require('./firebase');
 
 const router = express.Router();
 
-router.post('/signup', (req, res) => {
-  const { email, password } = req.body;
+//only for example!!
 
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      res.status(200).json({ user });
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      res.status(500).json({ error: errorMessage });
-    });
-});
+// router.post('/signup', (req, res) => {
+//   const { email, password } = req.body;
+
+//   createUserWithEmailAndPassword(auth, email, password)
+//     .then((userCredential) => {
+//       const user = userCredential.user;
+//       res.status(200).json({ user });
+//     })
+//     .catch((error) => {
+//       const errorCode = error.code;
+//       const errorMessage = error.message;
+//       res.status(500).json({ error: errorMessage });
+//     });
+// });
 
 router.post('/signin', (req, res) => {
   const { email, password } = req.body;
