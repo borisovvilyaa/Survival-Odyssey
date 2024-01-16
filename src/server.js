@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./auth/authRoutes');
 const profileRoutes = require('./profile/profileRoutes');
+const newsRoutes = require('./news/newsRoutes');
 
 const server = express();
 const PORT = 3000;
@@ -12,6 +13,7 @@ server.use(cors());
 
 server.use('/api', authRoutes);
 server.use('/api', profileRoutes);
+server.use('/api', newsRoutes);
 
 server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

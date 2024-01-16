@@ -21,16 +21,14 @@ const serviceAccount = {
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL:process.env.FIREBASE_DATABASE_URL,
+  databaseURL: process.env.FIREBASE_DATABASE_URL,
 });
 
 const database = admin.database();
-
-
-
 const router = express.Router();
 
-const authenticateUser = (req, res, next) => {
+// Функция проверки аутентификации
+function authenticateUser(req, res, next) {
   const user = auth.currentUser;
 
   if (user) {
@@ -39,14 +37,12 @@ const authenticateUser = (req, res, next) => {
   } else {
     res.status(401).json({ error: 'User not authenticated' });
   }
-};
+}
 
-router.use(authenticateUser);
-
-router.get('/profile-data', async (req, res) => {
+// Маршруты, требующие аутентификации
+router.get('/profile-data', authenticateUser, async (req, res) => {
   try {
     const user = req.user;
-
     const userReference = database.ref('users').child(user.uid).child('nickname');
     const snapshot = await userReference.once('value');
 
@@ -68,29 +64,28 @@ router.get('/profile-data', async (req, res) => {
   }
 });
 
-module.exports = router;
+router.get('/profile-data/islogined', authenticateUser, (req, res) => {
+  const user = auth.currentUser;
 
-router.get('/profile-data/islogined', (req, res) => {
-    const user = auth.currentUser;
-  
-    if (user) {
-      res.status(200).json({ isLoggedin: true });
-    } else {
-      res.status(200).json({ isLoggedin: false });
-    }
-  });
-router.post('/profile-data/logout', (req, res) => {
-    auth.signOut()
-      .then(() => {
-        res.status(200).json({ message: 'Logout successful' });
-      })
-      .catch((error) => {
-        console.error('Logout error:', error);
-        res.status(500).json({ error: 'Internal server error' });
-      });
+  if (user) {
+    res.status(200).json({ isLoggedin: true });
+  } else {
+    res.status(200).json({ isLoggedin: false });
+  }
 });
 
-router.get('/profile-data/search', async (req, res) => {
+router.post('/profile-data/logout', authenticateUser, (req, res) => {
+  auth.signOut()
+    .then(() => {
+      res.status(200).json({ message: 'Logout successful' });
+    })
+    .catch((error) => {
+      console.error('Logout error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    });
+});
+
+router.get('/profile-data/search', authenticateUser, async (req, res) => {
   try {
     const nickname = req.query.nickname;
 
