@@ -1,10 +1,11 @@
 const express = require('express');
-const { Client } = require('pg');
+const { Pool } = require('pg');
 require('dotenv').config();
 
 const router = express.Router();
 
-const client = new Client({
+// Initialize PostgreSQL connection pool
+const pool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,
@@ -12,13 +13,14 @@ const client = new Client({
   port: process.env.DB_PORT,
 });
 
-client.connect()
-  .then(() => console.log('Подключено к PostgreSQL'))
-  .catch(err => console.error('Ошибка подключения к PostgreSQL', err));
+pool.connect()
+  .then(() => console.log('Connected to PostgreSQL'))
+  .catch(err => console.error('Error connecting to PostgreSQL', err));
 
+// Endpoint to get all news articles
 router.get('/news', async (req, res) => {
   try {
-    const result = await client.query('SELECT * FROM news');
+    const result = await pool.query('SELECT * FROM news_articles');
     const newsList = result.rows;
 
     res.status(200).json(newsList);
@@ -28,11 +30,12 @@ router.get('/news', async (req, res) => {
   }
 });
 
+// Endpoint to get a specific news article by ID
 router.get('/news/id/:id', async (req, res) => {
   try {
     const newsId = req.params.id;
 
-    const result = await client.query('SELECT * FROM news WHERE id = $1', [newsId]);
+    const result = await pool.query('SELECT * FROM news_articles WHERE article_id = $1', [newsId]);
     const news = result.rows[0];
 
     if (news) {
@@ -45,7 +48,5 @@ router.get('/news/id/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
-
 
 module.exports = router;
