@@ -1,0 +1,47 @@
+.markdown-content {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1em;
+    }
+  
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+  
+    th {
+      color: #000;
+      background-color: #f2f2f2;
+    }
+  
+    p {
+      line-height: 1.6;
+      margin-bottom: 1em;
+    }
+  
+    code {
+        font-family: Menlo, Monaco, "Courier New", monospace;
+      }
+      
+  
+    blockquote {
+      border-left: 4px solid #f2f2f2;
+      padding: 0 15px;
+      margin: 0 0 20px;
+    }
+    img {
+      max-width: 200px;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 1em;
+    }
+    pre {
+        padding: 20px;
+        border-radius: 20px;
+      background-color: #2d333b;
+    }
+  }
+  
